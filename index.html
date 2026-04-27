@@ -248,44 +248,44 @@
         <!-- AD_MIDDLE: 放在結果卡片與詳細表格中間，帶有動畫效果 -->
         <div id="ad-middle-slot" class="hidden mb-10 w-full h-32 border-2 border-dashed border-slate-200 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 text-xs tracking-widest uppercase animate-in fade-in slide-in-from-bottom-8 duration-1000">Advertisement - Middle Inline</div>
 
-        <div class="overflow-hidden rounded-2xl border border-slate-100 mb-10">
-          <table class="w-full text-left text-sm leading-relaxed">
+        <div class="overflow-x-auto rounded-2xl border border-slate-100 mb-10">
+          <table class="w-full min-w-[600px] text-left text-sm leading-relaxed">
             <thead class="bg-slate-50">
               <tr class="text-[10px] uppercase tracking-widest text-slate-400 border-b border-slate-100">
-                <th class="px-8 py-5 font-bold">評估維度</th>
-                <th class="px-8 py-5 font-bold">房地產 (含30年房貸)</th>
-                <th class="px-8 py-5 font-bold" id="table-etf-label">選定 ETF (對等投入)</th>
+                <th class="px-4 md:px-8 py-5 font-bold whitespace-nowrap">評估維度</th>
+                <th class="px-4 md:px-8 py-5 font-bold">房地產 (含30年房貸)</th>
+                <th class="px-4 md:px-8 py-5 font-bold" id="table-etf-label">選定 ETF (對等投入)</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
               <tr>
-                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">取得與持有成本</td>
-                <td class="px-8 py-5 text-slate-600" id="row-re-entry">--</td>
-                <td class="px-8 py-5 text-slate-600" id="row-etf-entry">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-400 font-bold text-xs uppercase whitespace-nowrap">取得與持有成本</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-re-entry">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-etf-entry">--</td>
               </tr>
               <tr>
-                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">預估出場稅賦</td>
-                <td class="px-8 py-5 text-slate-600" id="row-re-tax">--</td>
-                <td class="px-8 py-5 text-slate-600" id="row-etf-tax">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-400 font-bold text-xs uppercase whitespace-nowrap">預估出場稅賦</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-re-tax">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-etf-tax">--</td>
               </tr>
               <tr>
-                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">資金流動性</td>
-                <td class="px-8 py-5 text-slate-600" id="row-re-liquidity">極低 (需 3-6 個月變現)</td>
-                <td class="px-8 py-5 text-slate-600" id="row-etf-liquidity">極高 (T+2 日變現)</td>
+                <td class="px-4 md:px-8 py-5 text-slate-400 font-bold text-xs uppercase whitespace-nowrap">資金流動性</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-re-liquidity">極低 (需 3-6 個月變現)</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-etf-liquidity">極高 (T+2 日變現)</td>
               </tr>
               <tr>
-                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">管理維護成本</td>
-                <td class="px-8 py-5 text-slate-600" id="row-re-maintenance">--</td>
-                <td class="px-8 py-5 text-slate-600">0 (無維護支出)</td>
+                <td class="px-4 md:px-8 py-5 text-slate-400 font-bold text-xs uppercase whitespace-nowrap">管理維護成本</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-re-maintenance">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600">0 (無維護支出)</td>
               </tr>
               <tr>
-                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">現金流壓力</td>
-                <td class="px-8 py-5 text-slate-600" id="row-re-cashflow">--</td>
-                <td class="px-8 py-5 text-slate-600" id="row-etf-cashflow">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-400 font-bold text-xs uppercase whitespace-nowrap">現金流壓力</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-re-cashflow">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-600" id="row-etf-cashflow">--</td>
               </tr>
               <tr id="row-risk-assessment" class="hidden bg-slate-50/30">
-                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">風險敏感度 (利率)</td>
-                <td class="px-8 py-5 text-[11px] text-slate-500 leading-relaxed italic" colspan="2" id="stress-test-content">--</td>
+                <td class="px-4 md:px-8 py-5 text-slate-400 font-bold text-xs uppercase whitespace-nowrap">風險敏感度 (利率)</td>
+                <td class="px-4 md:px-8 py-5 text-[11px] text-slate-500 leading-relaxed italic" colspan="2" id="stress-test-content">--</td>
               </tr>
             </tbody>
           </table>
