@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>房地產 vs ETF 投資報酬比較 - 專業資產評估工具</title>
+  <!-- SEO & Social Sharing -->
+  <meta name="description" content="專業的房地產與 ETF 投資報酬分析工具，協助您透過數據做出明智的資產配置決策。">
+  <meta property="og:title" content="房地產 vs ETF 投資報酬比較 - 專業資產評估工具">
+  <meta property="og:description" content="理性評估資產走勢與持有成本，展開深度分析報告，協助您做出明智的資產配置決策。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+    body {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#FBFBF9] text-slate-800 font-sans selection:bg-stone-200 antialiased">
+
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto pt-16 pb-12 px-6">
+    <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+      <div>
+        <h1 class="text-5xl font-light tracking-tight text-slate-900">
+          房地產 <span class="font-medium text-slate-600">vs ETF</span> 投資報酬比較
+        </h1>
+        <p class="mt-4 text-slate-400 font-light max-w-2xl leading-relaxed">
+          理性評估資產走勢與持有成本，協助您做出明智的<span class="font-medium text-slate-600 underline underline-offset-4 decoration-slate-200">資產配置決策</span>。
+        </p>
+      </div>
+      <div class="text-xs tracking-widest uppercase text-slate-400 border-b border-slate-200 pb-1">
+        Professional Edition v1.0
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pb-24 space-y-8">
+
+    <!-- 新增：投資計算機輸入區 -->
+    <section class="bg-white border border-slate-100 rounded-xl p-8 shadow-sm space-y-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- 1. 共同設定 (Common) -->
+        <div class="lg:col-span-3 space-y-6 lg:border-r lg:border-slate-50 lg:pr-8">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="settings-2" class="w-4 h-4 text-slate-400"></i>
+            <span class="text-xs font-bold uppercase tracking-widest text-slate-900">共同參數</span>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">初始預算 (萬元)</label>
+              <input type="number" id="input-budget" value="500" class="w-full h-[42px] bg-slate-50 border-none rounded-t-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+              <input type="range" id="slider-budget" min="100" max="2000" step="50" value="500" class="w-full h-1 bg-slate-200 rounded-b-lg appearance-none cursor-pointer accent-slate-600">
+            </div>
+            <div class="mt-2">
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">房屋總價 (萬元)</label>
+              <span id="display-total-price" class="block w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 text-sm flex items-center text-slate-700">--</span>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">結算年限 (年)</label>
+              <input type="number" id="input-years" value="10" class="w-full h-[42px] bg-slate-50 border-none rounded-t-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+              <input type="range" id="slider-years" min="1" max="40" step="1" value="10" class="w-full h-1 bg-slate-200 rounded-b-lg appearance-none cursor-pointer accent-slate-600">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 房地產參數 (Real Estate) -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="home" class="w-4 h-4 text-slate-400"></i>
+            <span class="text-xs font-bold uppercase tracking-widest text-slate-900">房地產設定</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">房產地區</label>
+              <select id="district-selector" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all cursor-pointer text-sm">
+                <option value="台北市-大安區">台北市 - 大安區</option>
+                <option value="台北市-信義區">台北市 - 信義區</option>
+                <option value="台北市-內湖區">台北市 - 內湖區</option>
+                <option value="新北市-板橋區">新北市 - 板橋區</option>
+                <option value="新北市-中和區">新北市 - 中和區</option>
+                <option value="桃園市-桃園區">桃園市 - 桃園區</option>
+                <option value="桃園市-中壢區">桃園市 - 中壢區</option>
+                <option value="新竹市-東區">新竹市 - 東區</option>
+                <option value="新竹縣-竹北市">新竹縣 - 竹北市</option>
+                <option value="台中市-西屯區">台中市 - 西屯區</option>
+                <option value="台中市-北屯區">台中市 - 北屯區</option>
+                <option value="台南市-東區">台南市 - 東區</option>
+                <option value="台南市-安平區">台南市 - 安平區</option>
+                <option value="高雄市-鼓山區">高雄市 - 鼓山區</option>
+                <option value="高雄市-左營區">高雄市 - 左營區</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">房產類型</label>
+              <select id="input-re-type" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all cursor-pointer text-sm">
+                <option value="existing">新成屋 / 中古屋</option>
+                <option value="presale">預售屋 (分期投入)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">貸款成數 (%)</label>
+              <input type="number" id="input-ltv" value="70" step="1" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+            </div>
+            <div class="relative">
+              <div class="flex justify-between items-end mb-2">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400">預計年增值 (%)</label>
+                <span class="text-[9px] text-slate-400 font-light">*2016-2026 信義房價指數</span>
+              </div>
+              <input type="number" id="input-re-rate" value="4.2" step="0.1" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">預估房貸利率 (%)</label>
+              <input type="number" id="input-mortgage-rate" value="2.6" step="0.1" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+            </div>
+            <div>
+              <div class="flex justify-between items-end mb-2">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400">預估月租金 (萬)</label>
+                <span class="text-[9px] text-slate-400 font-light">*2025-2026 實價登錄平均</span>
+              </div>
+              <input type="number" id="input-rent" value="4.5" step="0.5" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+            </div>
+            <div class="flex items-center gap-2 pt-2 md:col-span-2">
+              <input type="checkbox" id="input-self-resident" class="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900">
+              <label for="input-self-resident" class="text-[11px] font-medium text-slate-600 cursor-pointer">
+                符合自住優惠條件 <span class="text-slate-400 font-light">(連續設籍滿 6 年，享 400 萬免稅額 & 10% 稅率)</span>
+              </label>
+            </div>
+            <div id="wait-years-container" class="hidden">
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">完工等待期 (年)</label>
+              <input type="number" id="input-wait-years" value="4" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. ETF 參數 (ETF) -->
+        <div class="lg:col-span-3 space-y-6 lg:border-l lg:border-slate-50 lg:pl-8">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="line-chart" class="w-4 h-4 text-slate-400"></i>
+            <span class="text-xs font-bold uppercase tracking-widest text-slate-900">ETF 設定</span>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">標的 ETF</label>
+              <select id="input-etf-select" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all cursor-pointer text-sm">
+                <optgroup label="台股熱門 (市值/配息)">
+                  <option value="11.2" data-id="0050">0050 元大台灣50</option>
+                  <option value="11.5" data-id="006208">006208 富邦台50</option>
+                  <option value="9.8" data-id="0056">0056 元大高股息</option>
+                  <option value="10.2" data-id="00878">00878 國泰永續高股息</option>
+                  <option value="12.4" data-id="00919">00919 群益台灣精選高息</option>
+                  <option value="11.8" data-id="00929">00929 復華台灣科技優息</option>
+                  <option value="11.1" data-id="00713">00713 元大台灣高息低波</option>
+                  <option value="12.5" data-id="00692">00692 富邦公司治理</option>
+                  <option value="14.2" data-id="00881">00881 國泰台灣5G+</option>
+                  <option value="8.5" data-id="00940">00940 元大台灣價值高息</option>
+                </optgroup>
+                <optgroup label="美股精選 (指數/產業)">
+                  <option value="12.8" data-id="VOO">VOO 標普 500 指數</option>
+                  <option value="18.2" data-id="QQQ">QQQ 納斯達克 100</option>
+                  <option value="12.1" data-id="VTI">VTI 美股全市場</option>
+                  <option value="9.5" data-id="VT">VT 全球股市</option>
+                  <option value="11.5" data-id="SCHD">SCHD 美股高股息</option>
+                  <option value="26.3" data-id="SMH">SMH 半導體 ETF</option>
+                  <option value="25.1" data-id="SOXX">SOXX 半導體指數</option>
+                  <option value="20.2" data-id="XLK">XLK 科技業類股</option>
+                  <option value="10.5" data-id="DIA">DIA 道瓊工業指數</option>
+                  <option value="7.8" data-id="ARKK">ARKK 創新科技</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <div class="flex justify-between items-end mb-2">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400">預期報酬 (%)</label>
+                <span class="text-[9px] text-slate-400 font-light">*過去十年年化</span>
+              </div>
+              <input type="number" id="input-etf-rate" value="11.2" step="0.1" class="w-full h-[42px] bg-slate-50 border-none rounded-lg px-4 outline-none ring-1 ring-slate-100 focus:ring-slate-900/10 transition-all text-sm">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-center items-center gap-6 p-6 bg-slate-50/50 rounded-xl">
+        <button id="calculate-btn" class="w-full md:w-auto min-w-[240px] bg-slate-900 text-white rounded-lg py-4 px-8 flex justify-between items-center hover:bg-slate-800 transition-all active:scale-[0.98] group shadow-xl shadow-slate-200">
+          <span class="text-sm font-bold tracking-widest">展開深度分析報告</span>
+          <i data-lucide="chevron-down" id="calc-btn-icon" class="w-5 h-5 ml-4 text-slate-400 group-hover:text-white transition-transform duration-500"></i>
+        </button>
+      </div>
+
+      <!-- 展開式結果空間 -->
+      <div id="analysis-expansion-area" class="hidden pt-12 animate-in fade-in slide-in-from-top-8 duration-700">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-1 h-6 bg-slate-900"></div>
+          <h2 class="text-lg font-semibold tracking-tight">資產對比分析與成本細節</h2>
+        </div>
+
+        <div id="expanded-summary-text" class="mb-10 p-6 bg-stone-50 rounded-xl text-sm text-slate-600 leading-relaxed border-l-4 border-slate-200">
+          <!-- 動態生成文字 -->
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div id="card-re" class="relative p-6 bg-white border border-slate-100 rounded-2xl transition-all duration-500 overflow-hidden">
+            <div id="badge-re" class="hidden absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg tracking-widest animate-pulse">
+              📈 報酬率較高
+            </div>
+            <p class="text-[10px] uppercase tracking-widest text-slate-400 mb-2">房地產淨資產</p>
+            <p class="text-3xl font-light text-slate-900"><span id="expanded-re" class="font-bold">--</span> <span class="text-sm">萬</span></p>
+          </div>
+          <div id="card-etf" class="relative p-6 bg-white border border-slate-100 rounded-2xl transition-all duration-500 overflow-hidden">
+            <div id="badge-etf" class="hidden absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg tracking-widest animate-pulse">
+              📈 報酬率較高
+            </div>
+            <p class="text-[10px] uppercase tracking-widest text-slate-400 mb-2" id="selected-etf-label">選定 ETF 淨資產</p>
+            <p class="text-3xl font-light text-slate-900"><span id="expanded-etf" class="font-bold">--</span> <span class="text-sm">萬</span></p>
+          </div>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl border border-slate-100 mb-10">
+          <table class="w-full text-left text-sm leading-relaxed">
+            <thead class="bg-slate-50">
+              <tr class="text-[10px] uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                <th class="px-8 py-5 font-bold">評估維度</th>
+                <th class="px-8 py-5 font-bold">房地產 (含30年房貸)</th>
+                <th class="px-8 py-5 font-bold" id="table-etf-label">選定 ETF (對等投入)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              <tr>
+                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">取得與持有成本</td>
+                <td class="px-8 py-5 text-slate-600" id="row-re-entry">--</td>
+                <td class="px-8 py-5 text-slate-600" id="row-etf-entry">--</td>
+              </tr>
+              <tr>
+                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">預估出場稅賦</td>
+                <td class="px-8 py-5 text-slate-600" id="row-re-tax">--</td>
+                <td class="px-8 py-5 text-slate-600" id="row-etf-tax">--</td>
+              </tr>
+              <tr>
+                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">資金流動性</td>
+                <td class="px-8 py-5 text-slate-600" id="row-re-liquidity">極低 (需 3-6 個月變現)</td>
+                <td class="px-8 py-5 text-slate-600" id="row-etf-liquidity">極高 (T+2 日變現)</td>
+              </tr>
+              <tr>
+                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">管理維護成本</td>
+                <td class="px-8 py-5 text-slate-600" id="row-re-maintenance">--</td>
+                <td class="px-8 py-5 text-slate-600">0 (無維護支出)</td>
+              </tr>
+              <tr>
+                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">現金流壓力</td>
+                <td class="px-8 py-5 text-slate-600" id="row-re-cashflow">--</td>
+                <td class="px-8 py-5 text-slate-600" id="row-etf-cashflow">--</td>
+              </tr>
+              <tr id="row-risk-assessment" class="hidden bg-slate-50/30">
+                <td class="px-8 py-5 text-slate-400 font-bold text-xs uppercase">風險敏感度 (利率)</td>
+                <td class="px-8 py-5 text-[11px] text-slate-500 leading-relaxed italic" colspan="2" id="stress-test-content">--</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="border-t border-slate-50">
+            <button id="btn-toggle-risk" class="w-full py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+              <span>查看風險敏感度評估</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 新增：逐年明細表格 -->
+        <div class="mb-10">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="table-2" class="w-4 h-4 text-slate-400"></i>
+            <span class="text-xs font-bold uppercase tracking-widest text-slate-900">2026-2046 資產結算明細（年度）</span>
+            <span class="text-[10px] text-slate-400 ml-2 font-normal">(單位：萬元。含 2 年寬限期，ETF 已計入股息再投入)</span>
+          </div>
+          <div class="overflow-x-auto rounded-2xl border border-slate-100">
+            <table class="w-full text-left text-[11px] leading-relaxed">
+              <thead class="bg-slate-50 border-b border-slate-100">
+                <tr class="text-slate-400 uppercase tracking-tighter">
+                  <th class="px-4 py-3 font-bold">年分 (萬)</th>
+                  <th class="px-4 py-3 font-bold bg-blue-50/30 text-blue-800">房產預估售價</th>
+                  <th class="px-4 py-3 font-bold bg-blue-50/30 text-blue-800">房貸剩餘本金</th>
+                  <th class="px-4 py-3 font-bold bg-blue-50/30 text-blue-900">房產結算淨值</th>
+                  <th class="px-4 py-3 font-bold bg-emerald-50/30 text-emerald-800">年再投入(房貸-租金)</th>
+                  <th class="px-4 py-3 font-bold bg-emerald-50/30 text-emerald-800">ETF 成本(稅)</th>
+                  <th class="px-4 py-3 font-bold bg-emerald-50/30 text-emerald-700" id="yearly-etf-header">ETF 結算淨資產</th>
+                </tr>
+              </thead>
+              <tbody id="yearly-breakdown-body" class="divide-y divide-slate-50">
+                <!-- 由 JavaScript 動態生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 計算邏輯移動至此 -->
+        <div class="p-8 bg-slate-50/50 rounded-2xl border border-slate-100">
+          <div class="flex items-center gap-2 mb-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+            <i data-lucide="info" class="w-4 h-4"></i> 詳細計算邏輯與假設
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-xs text-slate-500 leading-relaxed">
+            <div>
+              <h4 class="font-bold text-slate-700 mb-3">房地產計算</h4>
+              <ul class="space-y-2 list-disc list-inside">
+                <li>槓桿：依貸款成數設定，房貸 30 年 (360期)。</li>
+                <li>寬限期：前 2 年僅支付利息，第 3 年起本利攤還。</li>
+                <li>稅賦：房地合一稅依持有年限與自住條件自動計算。</li>
+                <li><b>租金成長：</b>系統參考各區域過往十年資料自動帶入房租年增率 (約 1.5% - 3.2%) 逐年複利計算。</li>
+                <li><b>增值校準：</b>考量建物折舊，第11年起增值率調整為 85%，第21年起為 70%。</li>
+                <li>終值：未來房價 (含折舊校準) + 租金 - 剩餘貸款 - 出場成本。</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-700 mb-3">選定 ETF</h4>
+              <ul class="space-y-2 list-disc list-inside">
+                <li>交易成本：台股 (0.1425% 費 / 0.1% 稅)；美股 (電匯費與匯損)。</li>
+                <li><b>股價校正：</b>採用「還原權值」計算，自動抵消拆分與除息影響。</li>
+                <li><b>對等投入：</b>初始與每月淨投入與房產完全一致。</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-700 mb-3">數據來源</h4>
+              <ul class="space-y-2 list-disc list-inside">
+                <li><b>增值率：</b>參考「信義房價指數」2016-2026 區域複合成長率。</li>
+                <li><b>投報率：</b>參考「內政部實價登錄」近一年區域平均租金比。</li>
+                <li><b>ETF：</b>參考各標的官網過去十年年化報酬數據。</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-700 mb-3">其他假設</h4>
+              <ul class="space-y-2 list-disc list-inside">
+                <li>規費：仲介 2% + 契稅 0.5% + 代書 3 萬。</li>
+                <li>維護：租金收入預設扣除 20% 修繕與管理成本。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 市場走勢對比區 (整合至展開空間外或內，此處保留在主路徑以供參考) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <section class="bg-white border border-slate-100 rounded-xl p-8 shadow-sm">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="p-2 bg-slate-50 rounded-lg text-slate-400"><i data-lucide="home" class="w-5 h-5"></i></div>
+          <h2 class="text-lg font-semibold tracking-tight" id="re-chart-title">房地產走勢</h2>
+        </div>
+        <div class="h-[280px] md:h-80 w-full"><canvas id="realEstateChart"></canvas></div>
+      </section>
+      <section class="bg-white border border-slate-100 rounded-xl p-8 shadow-sm">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="p-2 bg-slate-50 rounded-lg text-slate-400"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+          <div>
+            <h2 class="text-lg font-semibold tracking-tight text-slate-900" id="etf-chart-title">ETF 價格歷史</h2>
+            <p class="text-[10px] text-slate-400 font-light mt-1">*數據已根據 2025 年拆股與配息進行還原權值校準</p>
+          </div>
+        </div>
+        <div class="h-[280px] md:h-80 w-full"><canvas id="etfHistoryChart"></canvas></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-100 py-16 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="space-y-4">
+        <h3 class="text-sm font-semibold text-slate-900 tracking-wider uppercase">免責聲明</h3>
+        <p class="text-sm text-slate-400 leading-relaxed font-light">
+          本平台所提供之資訊（包含但不限於房價走勢、ETF 報酬率等）均為模擬數據或基於歷史公開資料之推估，
+          僅供技術展示與教育研究參考。我們不保證資訊之即時性與準確性。投資前請諮詢專業財務顧問，自行承擔損益風險。
+        </p>
+      </div>
+      <div class="md:text-right flex flex-col justify-between">
+        <div class="space-y-4">
+          <h3 class="text-sm font-semibold text-slate-900 tracking-wider uppercase">聯絡我們</h3>
+          <div class="flex flex-col md:items-end gap-2 text-sm text-slate-500">
+            <a href="mailto:contact@investment-lab.com" class="hover:text-slate-900 flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4"></i> contact@investment-lab.com
+            </a>
+            <p>© 2026 Investment Analysis Tool Project.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * 模擬資料 (Mock Data)
+     * yield: 過去一年平均年化租金投報率 (%)
+     * growthRate: 過去十年平均房價年增值率 (%)
+     * 數據參考：實價登錄、信義房價指數與各大房仲統計之區域平均值。
+     */
+    const REAL_ESTATE_DATA = {
+      '台北市-內湖區': { history: [
+        { month: '2025-Q1', existing: 75, presale: 92 }, { month: '2025-Q2', existing: 76.5, presale: 95 },
+        { month: '2025-Q3', existing: 78.2, presale: 98.5 }, { month: '2025-Q4', existing: 77.8, presale: 96.8 },
+        { month: '2026-Q1', existing: 79.5, presale: 102 }
+      ], yield: 1.9, growthRate: 3.8, rentGrowth: 1.8 },
+      '台北市-大安區': { history: [
+        { month: '2025-Q1', existing: 115, presale: 152 }, { month: '2025-Q2', existing: 117, presale: 155 },
+        { month: '2025-Q3', existing: 120, presale: 162 }, { month: '2025-Q4', existing: 119.5, presale: 159 },
+        { month: '2026-Q1', existing: 123, presale: 169 }
+      ], yield: 1.6, growthRate: 3.2, rentGrowth: 1.5 },
+      '台北市-信義區': { history: [
+        { month: '2025-Q1', existing: 130, presale: 178 }, { month: '2025-Q2', existing: 133, presale: 183 },
+        { month: '2025-Q3', existing: 137, presale: 190 }, { month: '2025-Q4', existing: 136, presale: 188 },
+        { month: '2026-Q1', existing: 140, presale: 198 }
+      ], yield: 1.7, growthRate: 3.4, rentGrowth: 1.6 },
+      '新北市-板橋區': { history: [
+        { month: '2025-Q1', existing: 65, presale: 86 }, { month: '2025-Q2', existing: 67, presale: 89 },
+        { month: '2025-Q3', existing: 69, presale: 93 }, { month: '2025-Q4', existing: 68.5, presale: 92 },
+        { month: '2026-Q1', existing: 71, presale: 98 }
+      ], yield: 2.2, growthRate: 4.1, rentGrowth: 2.1 },
+      '新北市-中和區': { history: [
+        { month: '2025-Q1', existing: 58, presale: 76 }, { month: '2025-Q2', existing: 59.5, presale: 78 },
+        { month: '2025-Q3', existing: 61, presale: 81 }, { month: '2025-Q4', existing: 60.8, presale: 80 },
+        { month: '2026-Q1', existing: 63, presale: 85 }
+      ], yield: 2.4, growthRate: 3.9, rentGrowth: 2.2 },
+      '桃園市-桃園區': { history: [
+        { month: '2025-Q1', existing: 35, presale: 48 }, { month: '2025-Q2', existing: 36.5, presale: 50 },
+        { month: '2025-Q3', existing: 38, presale: 53 }, { month: '2025-Q4', existing: 37.8, presale: 52 },
+        { month: '2026-Q1', existing: 40, presale: 56 }
+      ], yield: 2.6, growthRate: 4.8, rentGrowth: 2.5 },
+      '桃園市-中壢區': { history: [
+        { month: '2025-Q1', existing: 33, presale: 45 }, { month: '2025-Q2', existing: 34.5, presale: 48 },
+        { month: '2025-Q3', existing: 36, presale: 51 }, { month: '2025-Q4', existing: 35.8, presale: 50 },
+        { month: '2026-Q1', existing: 38, presale: 54 }
+      ], yield: 2.8, growthRate: 5.1, rentGrowth: 2.4 },
+      '新竹市-東區': { history: [
+        { month: '2025-Q1', existing: 62, presale: 80 }, { month: '2025-Q2', existing: 65, presale: 83 },
+        { month: '2025-Q3', existing: 69, presale: 90 }, { month: '2025-Q4', existing: 68.5, presale: 88 },
+        { month: '2026-Q1', existing: 72, presale: 97 }
+      ], yield: 2.3, growthRate: 6.5, rentGrowth: 2.8 },
+      '新竹縣-竹北市': { history: [
+        { month: '2025-Q1', existing: 60, presale: 78 }, { month: '2025-Q2', existing: 64, presale: 84 },
+        { month: '2025-Q3', existing: 69, presale: 94 }, { month: '2025-Q4', existing: 68.5, presale: 92 },
+        { month: '2026-Q1', existing: 74, presale: 104 }
+      ], yield: 2.1, growthRate: 8.2, rentGrowth: 3.0 },
+      '台中市-西屯區': { history: [
+        { month: '2025-Q1', existing: 48, presale: 68 }, { month: '2025-Q2', existing: 50, presale: 71 },
+        { month: '2025-Q3', existing: 53, presale: 76 }, { month: '2025-Q4', existing: 52.5, presale: 74 },
+        { month: '2026-Q1', existing: 56, presale: 81 }
+      ], yield: 2.5, growthRate: 5.4, rentGrowth: 2.3 },
+      '台中市-北屯區': { history: [
+        { month: '2025-Q1', existing: 41, presale: 55 }, { month: '2025-Q2', existing: 43, presale: 58 },
+        { month: '2025-Q3', existing: 46, presale: 63 }, { month: '2025-Q4', existing: 45.5, presale: 61 },
+        { month: '2026-Q1', existing: 49, presale: 68 }
+      ], yield: 2.7, growthRate: 6.5, rentGrowth: 2.4 },
+      '台南市-東區': { history: [
+        { month: '2025-Q1', existing: 35, presale: 48 }, { month: '2025-Q2', existing: 36.5, presale: 50 },
+        { month: '2025-Q3', existing: 38.5, presale: 53 }, { month: '2025-Q4', existing: 38, presale: 52 },
+        { month: '2026-Q1', existing: 41, presale: 57 }
+      ], yield: 3.1, growthRate: 5.2, rentGrowth: 2.9 },
+      '台南市-安平區': { history: [
+        { month: '2025-Q1', existing: 31, presale: 41 }, { month: '2025-Q2', existing: 32.5, presale: 43 },
+        { month: '2025-Q3', existing: 34, presale: 46 }, { month: '2025-Q4', existing: 33.5, presale: 45 },
+        { month: '2026-Q1', existing: 36, presale: 49 }
+      ], yield: 3.4, growthRate: 5.8, rentGrowth: 3.2 },
+      '高雄市-鼓山區': { history: [
+        { month: '2025-Q1', existing: 41, presale: 58 }, { month: '2025-Q2', existing: 43, presale: 61 },
+        { month: '2025-Q3', existing: 45, presale: 65 }, { month: '2025-Q4', existing: 44.5, presale: 64 },
+        { month: '2026-Q1', existing: 47, presale: 69 }
+      ], yield: 2.6, growthRate: 4.9, rentGrowth: 2.5 },
+      '高雄市-左營區': { history: [
+        { month: '2025-Q1', existing: 35, presale: 51 }, { month: '2025-Q2', existing: 37, presale: 54 },
+        { month: '2025-Q3', existing: 39, presale: 58 }, { month: '2025-Q4', existing: 38.5, presale: 57 },
+        { month: '2026-Q1', existing: 41, presale: 62 }
+      ], yield: 2.8, growthRate: 5.2, rentGrowth: 2.6 },
+    };
+
+    const ETF_DATA_EXT = {
+      '0050': { name: '0050 元大台灣50', return: 11.2, history: [31.6, 37.0, 37.6, 39.0, 41.0] },
+      '006208': { name: '006208 富邦台50', return: 11.5, history: [78, 83, 85, 92, 102] },
+      '0056': { name: '0056 元大高股息', return: 9.8, history: [28, 32, 35, 33, 38] },
+      '00878': { name: '00878 國泰永續高股息', return: 10.2, history: [18, 20, 22, 21, 23] },
+      '00919': { name: '00919 群益台灣精選高息', return: 12.4, history: [22, 24, 26, 25, 27] },
+      '00929': { name: '00929 復華台灣科技優息', return: 11.8, history: [17, 19, 21, 20, 22] },
+      '00713': { name: '00713 元大台灣高息低波', return: 11.1, history: [45, 48, 52, 50, 55] },
+      '00692': { name: '00692 富邦公司治理', return: 12.5, history: [32, 35, 38, 37, 40] },
+      '00881': { name: '00881 國泰台灣5G+', return: 14.2, history: [15, 18, 21, 19, 23] },
+      '00940': { name: '00940 元大台灣價值高息', return: 8.5, history: [9.5, 9.8, 10.2, 9.9, 10.5] },
+      'VOO': { name: 'VOO 標普 500 指數', return: 12.8, history: [410, 440, 470, 460, 500] },
+      'QQQ': { name: 'QQQ 納斯達克 100', return: 18.2, history: [420, 460, 485, 510, 545] },
+      'VTI': { name: 'VTI 美股全市場', return: 12.1, history: [248, 260, 275, 282, 305] },
+      'VT': { name: 'VT 全球股市', return: 9.5, history: [102, 105, 110, 108, 115] },
+      'SCHD': { name: 'SCHD 美股高股息', return: 11.5, history: [72, 75, 78, 77, 82] },
+      'SMH': { name: 'SMH 半導體 ETF', return: 26.3, history: [180, 210, 240, 230, 280] },
+      'SOXX': { name: 'SOXX 半導體指數', return: 25.1, history: [150, 180, 210, 200, 250] },
+      'XLK': { name: 'XLK 科技業類股', return: 20.2, history: [160, 180, 205, 195, 230] },
+      'DIA': { name: 'DIA 道瓊工業指數', return: 10.5, history: [340, 360, 380, 375, 400] },
+      'ARKK': { name: 'ARKK 創新科技', return: 7.8, history: [45, 52, 48, 42, 50] }
+    };
+
+    const QUARTERS = ['2025-Q1', '2025-Q2', '2025-Q3', '2025-Q4', '2026-Q1'];
+
+    let realEstateChartInstance = null;
+    let etfChartInstance = null;
+
+    /** 渲染房地產圖表 */
+    function renderRealEstateChart(district) {
+      const titleEl = document.getElementById('re-chart-title');
+      if (titleEl) titleEl.innerText = `房地產走勢 - ${district} (萬元/坪)`;
+
+      const districtObj = REAL_ESTATE_DATA[district];
+      const labels = districtObj.history.map(d => d.month);
+      const existingPrices = districtObj.history.map(d => d.existing);
+      const presalePrices = districtObj.history.map(d => d.presale);
+
+      const ctx = document.getElementById('realEstateChart').getContext('2d');
+      const isMobile = window.innerWidth < 768;
+
+      if (realEstateChartInstance) {
+        realEstateChartInstance.destroy(); // 銷毀舊圖表實例
+      }
+
+      realEstateChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+          {
+            label: '預售屋',
+            data: presalePrices,
+            borderColor: '#BDB0A4', // 莫蘭迪大地色 (Taupe)
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            borderDash: [5, 5], // 虛線區分預售
+            pointRadius: 4,
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 2,
+            fill: false,
+            tension: 0.3
+          },
+          {
+            label: '中古屋',
+            data: existingPrices,
+            borderColor: '#94A7AE', // 莫蘭迪藍綠色 (Muted Teal)
+            backgroundColor: 'rgba(148, 167, 174, 0.08)',
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#94A7AE',
+            pointBorderWidth: 2,
+            fill: true,
+            tension: 0.3
+          }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 10,
+              bottom: 10,
+              left: isMobile ? 0 : 10,
+              right: isMobile ? 0 : 10
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: isMobile ? 8 : 12,
+                usePointStyle: true,
+                font: { size: 10, weight: '500' }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'white',
+              titleColor: '#1e293b',
+              bodyColor: '#475569',
+              borderColor: '#e2e8f0',
+              borderWidth: 1,
+              borderRadius: 12,
+              padding: 12,
+              displayColors: false,
+            }
+          },
+          scales: {
+            y: {
+          title: {
+            display: true,
+            text: '單位：萬元/坪',
+            color: '#94A3B8',
+            font: { size: 10 }
+          },
+              grid: {
+                color: '#F1F5F9',
+                drawBorder: false,
+              },
+              ticks: {
+                color: '#CBD5E1',
+                font: { size: isMobile ? 10 : 11 }
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#94A3B8',
+                font: { size: isMobile ? 10 : 11 },
+                maxRotation: 0,
+                minRotation: 0,
+              }
+            }
+          }
+        }
+      });
+    }
+
+    /** 渲染 ETF 歷史走勢圖 */
+    function renderEtfHistoryChart(etfId) {
+      const etf = ETF_DATA_EXT[etfId];
+      if (!etf) return;
+
+      // 判斷美股或台股以決定單位
+      const isUS = ['VOO', 'QQQ', 'VTI', 'VT', 'SCHD', 'SMH', 'SOXX', 'XLK', 'DIA', 'ARKK'].includes(etfId);
+      const unit = isUS ? '美元' : '元';
+
+      document.getElementById('etf-chart-title').innerText = `${etf.name} 歷史趨勢 (${unit})`;
+      const ctx = document.getElementById('etfHistoryChart').getContext('2d');
+      const isMobile = window.innerWidth < 768;
+      if (etfChartInstance) etfChartInstance.destroy();
+
+      const is0050 = etfId === '0050';
+      etfChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: QUARTERS,
+          datasets: [{
+            label: is0050 ? '股價 (2025 拆股校準後)' : '股價 (還原權值)',
+            data: etf.history,
+            borderColor: '#828E82', // 莫蘭迪橄欖灰 (Sage)
+            backgroundColor: 'rgba(130, 142, 130, 0.08)',
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: '#fff',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 20,
+              bottom: 10,
+              left: isMobile ? 0 : 10,
+              right: isMobile ? 0 : 10
+            }
+          },
+          plugins: { 
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'white',
+              titleColor: '#1e293b',
+              bodyColor: '#475569',
+              borderColor: '#e2e8f0',
+              borderWidth: 1,
+              borderRadius: 12,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `價格: ${context.parsed.y.toLocaleString()} ${unit}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: { 
+              title: {
+                display: true,
+                text: `單位：${unit}`,
+                color: '#94A3B8',
+                font: { size: 10 }
+              },
+              grid: { color: '#F1F5F9' }, 
+              ticks: { color: '#CBD5E1', font: { size: isMobile ? 10 : 11 } } 
+            },
+            x: { grid: { display: false }, ticks: { color: '#94A3B8', font: { size: isMobile ? 10 : 11 } } }
+          }
+        }
+      });
+    }
+
+    /** 計算分段增值後的房價 (自動帶入屋齡折舊校準) */
+    function getStaggeredPrice(initial, rate, years) {
+      let price = initial;
+      for (let i = 1; i <= Math.floor(years); i++) {
+        let multiplier = 1.0;
+        if (i > 20) multiplier = 0.7;
+        else if (i > 10) multiplier = 0.85;
+        price *= (1 + (rate * multiplier));
+      }
+      return price;
+    }
+
+    /** 隱藏深度分析報告 */
+    function hideAnalysisReport() {
+      const expansion = document.getElementById('analysis-expansion-area');
+      const icon = document.getElementById('calc-btn-icon');
+      const calcBtn = document.getElementById('calculate-btn');
+      if (expansion && !expansion.classList.contains('hidden')) {
+        expansion.classList.add('hidden');
+        calcBtn.classList.remove('bg-slate-600');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    /** 初始化 ETF 選項與連動 */
+    function initEtfLogic() {
+      const etfSelect = document.getElementById('input-etf-select');
+      const etfRateInput = document.getElementById('input-etf-rate');
+
+      etfSelect?.addEventListener('change', (e) => {
+        const val = e.target.value;
+        const opt = e.target.options[e.target.selectedIndex];
+        const id = opt.dataset.id;
+        etfRateInput.value = val;
+        if (id) renderEtfHistoryChart(id);
+        hideAnalysisReport();
+      });
+    }
+
+    /** 簡易計算機邏輯 */
+    function calculateROI() {
+      const budgetInput = document.getElementById('input-budget');
+      const yearsInput = document.getElementById('input-years');
+      const reRateInput = document.getElementById('input-re-rate');
+      const etfRateInput = document.getElementById('input-etf-rate');
+      const rentInput = document.getElementById('input-rent');
+      const districtSelector = document.getElementById('district-selector');
+      const district = districtSelector?.value;
+      const reTypeInput = document.getElementById('input-re-type');
+      const waitYearsInput = document.getElementById('input-wait-years');
+      const mortgageRateInput = document.getElementById('input-mortgage-rate');
+      const ltvInput = document.getElementById('input-ltv');
+      const isSelfResident = document.getElementById('input-self-resident')?.checked;
+      const etfSelect = document.getElementById('input-etf-select');
+      
+      // 結果顯示與表格元素
+      const targetIds = ['expanded-re', 'expanded-etf', 'selected-etf-label', 'table-etf-label',
+                   'row-re-entry', 'row-re-tax', 'row-etf-entry', 'row-etf-tax', 'row-re-liquidity', 'row-re-cashflow', 'row-etf-cashflow', 'row-re-maintenance',
+                   'expanded-summary-text', 'yearly-breakdown-body', 'yearly-etf-header', 'stress-test-content'];
+      const els = {};
+      targetIds.forEach(id => els[id] = document.getElementById(id));
+
+      if (!budgetInput || !yearsInput) return;
+
+      const selectedEtfName = etfSelect?.options[etfSelect.selectedIndex].text.split(' ')[0] || 'ETF';
+      const budget = parseFloat(budgetInput.value) || 0;
+      const years = parseFloat(yearsInput.value) || 0;
+      const reRate = (parseFloat(reRateInput.value) || 0) / 100;
+      const etfRate = (parseFloat(etfRateInput.value) || 0) / 100;
+      const rentGrowthVal = (REAL_ESTATE_DATA[district]?.rentGrowth || 1.5);
+      const rentGrowth = rentGrowthVal / 100;
+      const mRate = (parseFloat(mortgageRateInput.value) || 0) / 100 / 12; // 房貸月利率
+      const monthlyRent = parseFloat(rentInput.value) || 0;
+      const reType = reTypeInput.value;
+      const waitYears = reType === 'presale' ? (parseFloat(waitYearsInput.value) || 0) : 0;
+      const ltv = (parseFloat(ltvInput.value) || 70) / 100;
+      
+      // 更新流動性描述 (量化)
+      // TODO: 考慮將流動性描述與閉鎖期邏輯整合到 calculateROI 之外，讓 updateSuggestedRent 也能觸發
+      if(els['row-re-liquidity']) els['row-re-liquidity'].innerText = years < 5 ? '極低 (受房地合一稅閉鎖影響)' : '低 (需 3-6 個月售屋期)';
+
+      // --- 1. 房地產詳細計算 ---
+      const downPaymentRatio = 1 - ltv;
+      const initialPrice = budget / downPaymentRatio;
+      const loanAmount = initialPrice * ltv;
+      const reEntryCost = (initialPrice * 0.02) + (initialPrice * 0.005) + 3; // 2%仲介 + 0.5%契稅印花 + 3萬代書
+      if(document.getElementById('display-total-price')) document.getElementById('display-total-price').innerText = Math.round(initialPrice).toLocaleString();
+      const futurePrice = getStaggeredPrice(initialPrice, reRate, years);
+      const reExitCost = futurePrice * 0.04; // 4%仲介費
+      
+      // --- 房貸邏輯：含寬限期 (30年總期數) ---
+      const graceMonths = 24; // 2年寬限
+      const totalTermMonths = 360; // 30年
+      const piTermMonths = totalTermMonths - graceMonths; // 剩餘 28 年攤還
+      
+      const monthlyInterestOnly = loanAmount * mRate;
+      const monthlyPI = (loanAmount * mRate * Math.pow(1 + mRate, piTermMonths)) / (Math.pow(1 + mRate, piTermMonths) - 1);
+      
+      const currentMonths = years * 12;
+      
+      let remainingLoan = loanAmount;
+      if (currentMonths > graceMonths) {
+        const passedPIMonths = currentMonths - graceMonths;
+        remainingLoan = loanAmount * (Math.pow(1 + mRate, piTermMonths) - Math.pow(1 + mRate, passedPIMonths)) / (Math.pow(1 + mRate, piTermMonths) - 1);
+      }
+
+      // 預售屋在完工前沒有租金收入
+      let totalNetRentIncome = 0;
+      let currentYearNetRent = 0;
+      
+      for (let i = 1; i <= years; i++) {
+        const yrMonthlyRent = monthlyRent * Math.pow(1 + rentGrowth, i - 1);
+        const yrNetRent = yrMonthlyRent * 0.8; // 扣除 20% 維護
+        if (i > waitYears) totalNetRentIncome += (yrNetRent * 12);
+        if (i === Math.ceil(years)) currentYearNetRent = yrNetRent;
+      }
+
+      // 房地合一稅邏輯
+      const profit = futurePrice - initialPrice - reEntryCost - reExitCost;
+
+      const lastMonthlyMortgage = currentMonths <= graceMonths ? monthlyInterestOnly : monthlyPI;
+      
+      // 定義結算當下的現金流壓力（月房貸 - 當前月租金）
+      const isWaitPeriodNow = years <= waitYears;
+      const currentSipOutflow = Math.max(0, lastMonthlyMortgage - (isWaitPeriodNow ? 0 : currentYearNetRent));
+      
+      let taxRate = 0.15;
+      let taxExemption = 0;
+      
+      // 自住優惠判斷
+      if (isSelfResident && years >= 6) {
+        taxExemption = 400;
+        taxRate = 0.10;
+      } else {
+        if (years < 2) taxRate = 0.45;
+        else if (years < 5) taxRate = 0.35;
+        else if (years < 10) taxRate = 0.20;
+      }
+      
+      const houseTax = profit > taxExemption ? (profit - taxExemption) * taxRate : 0;
+
+      // 淨資產 = 未來售價 + 累計租金收入 - 剩餘貸款本金 - 出場交易成本 - 房地合一稅 - 進場成本
+      const reFinalNet = futurePrice + totalNetRentIncome - remainingLoan - reExitCost - houseTax - reEntryCost;
+      
+      if(els['expanded-re']) els['expanded-re'].innerText = Math.round(reFinalNet).toLocaleString();
+      if(els['row-re-entry']) els['row-re-entry'].innerHTML = `約 ${Math.round(reEntryCost)} 萬 <br><span class="text-[10px] text-slate-400 font-light">(含仲介2%、契稅0.5%、代書費)</span>`;
+      if(els['row-re-tax']) {
+        const taxInfo = isSelfResident && years >= 6 ? `自住優惠 10% (免稅額 400萬)` : `房地合一稅 ${taxRate*100}%`;
+        els['row-re-tax'].innerHTML = `約 ${Math.round(houseTax)} 萬 <br><span class="text-[10px] text-slate-400 font-light">(${taxInfo})</span>`;
+      }
+      if(els['row-re-maintenance']) els['row-re-maintenance'].innerHTML = `約 ${Math.round(monthlyRent * 0.2 * 10) / 10} 萬起 /月 <br><span class="text-[10px] text-slate-400 font-light">(首年預扣，隨租金調升)</span>`;
+      if(els['row-re-cashflow']) els['row-re-cashflow'].innerHTML = `<span class="text-slate-900 font-bold">約 ${Math.round(currentSipOutflow * 10) / 10} 萬 /月</span> <br><span class="text-[10px] text-slate-400 font-light">(第 ${Math.ceil(years)} 年房貸減淨租金)</span>`;
+
+      // --- 利率壓力測試內容 ---
+      if (els['stress-test-content']) {
+        const stressedMRate = (parseFloat(mortgageRateInput.value) + 0.5) / 100 / 12;
+        const stressedMonthlyPI = (loanAmount * stressedMRate * Math.pow(1 + stressedMRate, piTermMonths)) / (Math.pow(1 + stressedMRate, piTermMonths) - 1);
+        const monthlyDiff = (stressedMonthlyPI - monthlyPI) * 10000;
+        const totalLoss = (stressedMonthlyPI - monthlyPI) * Math.max(0, currentMonths - graceMonths);
+        els['stress-test-content'].innerHTML = `模擬試算：若房貸利率額外上升 0.5% 至 <span class="font-medium text-slate-700">${(parseFloat(mortgageRateInput.value)+0.5).toFixed(1)}%</span>，每月攤還將增加約 <span class="font-medium text-slate-700">${Math.round(monthlyDiff).toLocaleString()}</span> 元，全期支出將增加約 <span class="font-medium text-slate-700">${Math.round(totalLoss).toLocaleString()}</span> 萬元。`;
+      }
+
+      // --- 2. ETF 詳細計算 (初始預算 + 對等投入) ---
+      const selectedEtfId = etfSelect?.options[etfSelect.selectedIndex].dataset.id || '';
+      const isUS = ['VTI', 'VT', 'QQQ'].includes(selectedEtfId);
+      const etfEntryCost = isUS ? 0.1 : budget * 0.001425;
+      const initialEtfValue = (budget - etfEntryCost) * Math.pow(1 + etfRate, years);
+      
+      const monthlyEtfRate = Math.pow(1 + etfRate, 1/12) - 1;
+      let sipEtfValue = 0;
+      
+      // 對等投入計算：逐月累計複利
+      for (let m = 1; m <= currentMonths; m++) {
+          const isWaitPeriod = m <= (waitYears * 12);
+          const isGracePeriod = m <= graceMonths;
+          const currentMYear = Math.ceil(m / 12);
+          const mortgageOutflow = isGracePeriod ? monthlyInterestOnly : monthlyPI;
+          const rentInflow = isWaitPeriod ? 0 : (monthlyRent * Math.pow(1 + rentGrowth, currentMYear - 1) * 0.8);
+          const monthlySipAmount = Math.max(0, mortgageOutflow - rentInflow);
+          
+          sipEtfValue = (sipEtfValue + monthlySipAmount) * (1 + monthlyEtfRate);
+      }
+
+      const etfFutureValue = initialEtfValue + (sipEtfValue || 0);
+      const etfExitCost = isUS ? (0.1 + etfFutureValue * 0.003) : etfFutureValue * (0.001425 + 0.001); 
+      const etfFinalNet = etfFutureValue - etfExitCost;
+
+      if(els['selected-etf-label']) els['selected-etf-label'].innerText = `${selectedEtfName} 淨資產`;
+      if(els['table-etf-label']) els['table-etf-label'].innerText = `${selectedEtfName} (對等投入)`;
+      if(els['expanded-etf']) els['expanded-etf'].innerText = Math.round(etfFinalNet).toLocaleString();
+      
+      // 更新勝出者視覺效果
+      const cardRe = document.getElementById('card-re');
+      const cardEtf = document.getElementById('card-etf');
+      const badgeRe = document.getElementById('badge-re');
+      const badgeEtf = document.getElementById('badge-etf');
+
+      if (reFinalNet > etfFinalNet) {
+        cardRe.className = 'relative p-6 bg-blue-50/30 border-2 border-blue-500/20 rounded-2xl transition-all duration-500 shadow-lg shadow-blue-100/50';
+        cardEtf.className = 'relative p-6 bg-white border border-slate-100 rounded-2xl transition-all duration-500 opacity-60';
+        badgeRe?.classList.remove('hidden');
+        badgeEtf?.classList.add('hidden');
+      } else {
+        cardEtf.className = 'relative p-6 bg-blue-50/30 border-2 border-blue-500/20 rounded-2xl transition-all duration-500 shadow-lg shadow-blue-100/50';
+        cardRe.className = 'relative p-6 bg-white border border-slate-100 rounded-2xl transition-all duration-500 opacity-60';
+        badgeEtf?.classList.remove('hidden');
+        badgeRe?.classList.add('hidden');
+      }
+
+      if(els['row-etf-entry']) els['row-etf-entry'].innerHTML = isUS 
+        ? `約 1,000 元 <br><span class="text-[10px] text-slate-400 font-light">(美股電匯手續費)</span>` 
+        : `約 ${(etfEntryCost * 10000).toLocaleString()} 元 <br><span class="text-[10px] text-slate-400 font-light">(台股手續費 0.1425%)</span>`;
+      if(els['row-etf-tax']) els['row-etf-tax'].innerHTML = isUS 
+        ? `約 ${(etfExitCost * 10000).toLocaleString()} 元 <br><span class="text-[10px] text-slate-400 font-light">(含電匯、匯差與手續費)</span>` 
+        : `約 ${(etfExitCost * 10000).toLocaleString()} 元 <br><span class="text-[10px] text-slate-400 font-light">(含證交稅 0.1% 與手續費)</span>`;
+      if(els['row-etf-cashflow']) els['row-etf-cashflow'].innerHTML = `<span class="text-slate-900 font-bold">約 ${Math.round(currentSipOutflow * 10) / 10} 萬 /月</span> <br><span class="text-[10px] text-slate-400 font-light">(對等房產淨支出之定投)</span>`;
+      if(els['yearly-etf-header']) els['yearly-etf-header'].innerText = `${selectedEtfName} 結算淨資產`;
+
+      // --- 4. 生成 20 年逐年明細表 ---
+      if (els['yearly-breakdown-body']) {
+        let html = '';
+        for (let i = 1; i <= 20; i++) {
+          // 房產計算
+          const yrPrice = getStaggeredPrice(initialPrice, reRate, i);
+          const yrMonths = i * 12;
+          let yrRemainingLoan = loanAmount;
+          if (yrMonths > graceMonths) {
+              yrRemainingLoan = loanAmount * (Math.pow(1 + mRate, piTermMonths) - Math.pow(1 + mRate, yrMonths - graceMonths)) / (Math.pow(1 + mRate, piTermMonths) - 1);
+          }
+          let yrAccumulatedRent = 0;
+          for(let r=1; r<=i; r++) {
+            if(r > waitYears) yrAccumulatedRent += (monthlyRent * Math.pow(1 + rentGrowth, r - 1) * 0.8 * 12);
+          }
+
+          const yrExitCost = yrPrice * 0.04;
+          
+          let yrTaxExemption = 0;
+          let yrTaxRate = 0.15;
+          if (isSelfResident && i >= 6) {
+            yrTaxExemption = 400;
+            yrTaxRate = 0.10;
+          } else {
+            if (i < 2) yrTaxRate = 0.45;
+            else if (i < 5) yrTaxRate = 0.35;
+            else if (i < 10) yrTaxRate = 0.20;
+          }
+          
+          const yrProfit = yrPrice - initialPrice - reEntryCost - yrExitCost;
+          const yrTax = yrProfit > yrTaxExemption ? (yrProfit - yrTaxExemption) * yrTaxRate : 0;
+          const yrReNet = yrPrice + yrAccumulatedRent - yrRemainingLoan - yrExitCost - yrTax - reEntryCost;
+          const yrReTotalCost = reEntryCost + yrExitCost + yrTax;
+
+          // ETF 計算
+          const yrInitialEtf = (budget - etfEntryCost) * Math.pow(1 + etfRate, i);
+          let yrSipEtf = 0;
+          let yrAnnualSipOutflow = 0;
+
+          for (let m = 1; m <= yrMonths; m++) {
+              const mIsWait = m <= (waitYears * 12);
+              const mIsGrace = m <= graceMonths;
+              const mOutflow = mIsGrace ? monthlyInterestOnly : monthlyPI;
+              const mYear = Math.ceil(m / 12);
+              const mInflow = mIsWait ? 0 : (monthlyRent * Math.pow(1 + rentGrowth, mYear - 1) * 0.8);
+              const mNetSip = Math.max(0, mOutflow - mInflow);
+              yrSipEtf = (yrSipEtf + mNetSip) * (1 + monthlyEtfRate);
+              if (m > (i - 1) * 12) yrAnnualSipOutflow += mNetSip;
+          }
+
+          const yrEtfTotal = yrInitialEtf + yrSipEtf;
+          const yrEtfExitCost = isUS ? (0.1 + yrEtfTotal * 0.003) : yrEtfTotal * (0.001425 + 0.001);
+          const yrEtfNet = yrEtfTotal - yrEtfExitCost;
+
+          const isSelectedYear = Math.round(years) === i;
+
+          html += `
+            <tr class="${isSelectedYear ? 'bg-slate-900/5 font-semibold' : ''}">
+              <td class="px-4 py-2 border-r border-slate-50">第 ${i} 年 ${isSelectedYear ? '🎯' : ''}</td>
+              <td class="px-4 py-2 text-slate-500">${Math.round(yrPrice).toLocaleString()}</td>
+              <td class="px-4 py-2 text-slate-500">${Math.round(yrRemainingLoan).toLocaleString()}</td>
+              <td class="px-4 py-2 text-blue-900 font-bold">${Math.round(yrReNet).toLocaleString()}</td>
+              <td class="px-4 py-2 text-slate-500 italic">${Math.round(yrAnnualSipOutflow).toLocaleString()}</td>
+              <td class="px-4 py-2 text-slate-400 font-light">${Math.round(yrEtfExitCost).toLocaleString()}</td>
+              <td class="px-4 py-2 text-emerald-700 font-bold">${Math.round(yrEtfNet).toLocaleString()}</td>
+            </tr>
+          `;
+        }
+        els['yearly-breakdown-body'].innerHTML = html;
+      }
+
+      // 生成 Summary
+      if (els['expanded-summary-text']) {
+        const winner = reFinalNet > etfFinalNet ? '房地產' : selectedEtfName;
+        const diff = Math.abs(Math.round(reFinalNet - etfFinalNet));
+        els['expanded-summary-text'].innerHTML = `
+          在 <span class="text-slate-900 font-bold">${years}年</span> 的對等資金投入下，
+          ${reType === 'presale' && waitYears > 0 ? `預售屋需等待 ${waitYears} 年完工，` : ''}
+          房貸包含 2 年寬限期，且<span class="font-medium">租金假設每年成長 ${rentGrowthVal}% </span>並扣除 20% 維護成本。
+          貸款成數為 <span class="font-bold">${Math.round(ltv*100)}%</span>。
+          ${reFinalNet > etfFinalNet ? `房地產憑藉槓桿與租金收益展現強勢優勢` : `${selectedEtfName} 透過長期複利與持續定投展現其優勢`}。
+          <br/>最終資產淨值差距約 <span class="text-slate-900 font-bold">${diff.toLocaleString()} 萬</span>。在當前試算參數下，<span class="text-slate-900 underline decoration-slate-300 underline-offset-4">${winner}</span> 展現出較高的預估淨值回報。
+          分析提示：<span class="font-medium">房地產</span>需考量維修成本、極低流動性與**現金流壓力**；而<span class="font-medium">ETF</span>則須面對市場波動風險，但具備**高度的資金彈性**。
+        `;
+      }
+    }
+
+    /** 頁面初始化 */
+    document.addEventListener('DOMContentLoaded', () => {
+      // 初始化 Lucide 圖標
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+
+      const districtSelector = document.getElementById('district-selector');
+      
+      // 定義一個更新租金的統一函數
+      const updateSuggestedRent = () => {
+        const district = districtSelector.value;
+        const budget = parseFloat(document.getElementById('input-budget').value) || 0;
+        const ltv = (parseFloat(document.getElementById('input-ltv').value) || 70) / 100;
+        const totalPrice = budget / (1 - ltv);
+        document.getElementById('display-total-price').innerText = Math.round(totalPrice).toLocaleString();
+        const yieldRate = (REAL_ESTATE_DATA[district]?.yield || 2) / 100;
+        document.getElementById('input-rent').value = ((totalPrice * yieldRate) / 12).toFixed(1);
+      };
+
+      // 滑桿與輸入框連動
+      const syncInput = (sliderId, inputId) => {
+        const slider = document.getElementById(sliderId);
+        const input = document.getElementById(inputId);
+        slider.addEventListener('input', () => { input.value = slider.value; updateSuggestedRent(); hideAnalysisReport(); });
+        input.addEventListener('input', () => { slider.value = input.value; });
+      };
+      syncInput('slider-budget', 'input-budget');
+      syncInput('slider-years', 'input-years');
+
+      if (districtSelector) {
+        renderRealEstateChart(districtSelector.value);
+        districtSelector.addEventListener('change', (e) => {
+          const data = REAL_ESTATE_DATA[e.target.value];
+          if (data) {
+            document.getElementById('input-re-rate').value = data.growthRate;
+          }
+          updateSuggestedRent(); // 統一更新總價與連動租金
+          renderRealEstateChart(e.target.value);
+          hideAnalysisReport();
+        });
+      }
+
+      // 風險明細摺疊邏輯
+      document.getElementById('btn-toggle-risk')?.addEventListener('click', function() {
+        const row = document.getElementById('row-risk-assessment');
+        const isHidden = row.classList.toggle('hidden');
+        this.querySelector('span').innerText = isHidden ? '查看風險敏感度評估' : '收起風險敏感度評估';
+        if (this.querySelector('i')) this.querySelector('i').style.color = isHidden ? '' : '#94a3b8';
+      });
+
+      // 只有點擊「執行試算」按鈕時，才執行計算、動畫與捲動
+      const calcBtn = document.getElementById('calculate-btn');
+      calcBtn?.addEventListener('click', () => {
+        calculateROI();
+        // 展開面板
+        const expansion = document.getElementById('analysis-expansion-area');
+        const icon = document.getElementById('calc-btn-icon');
+        if (expansion) {
+          expansion.classList.remove('hidden');
+          calcBtn.classList.add('bg-slate-600');
+          icon.style.transform = 'rotate(180deg)';
+          
+          // 自動滾動到分析報告區域
+          setTimeout(() => {
+            expansion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      });
+
+      // 輸入框變動時僅「靜態更新」數值，不執行捲動
+      document.getElementById('input-budget')?.addEventListener('input', () => {
+        updateSuggestedRent();
+        hideAnalysisReport();
+      });
+      document.getElementById('input-years')?.addEventListener('input', hideAnalysisReport);
+      document.getElementById('input-re-rate')?.addEventListener('input', hideAnalysisReport);
+      document.getElementById('input-etf-rate')?.addEventListener('input', hideAnalysisReport);
+      document.getElementById('input-rent')?.addEventListener('input', hideAnalysisReport);
+      document.getElementById('input-re-type')?.addEventListener('change', (e) => {
+        const container = document.getElementById('wait-years-container');
+        container.classList.toggle('hidden', e.target.value !== 'presale');
+        hideAnalysisReport();
+      });
+      document.getElementById('input-wait-years')?.addEventListener('input', hideAnalysisReport);
+      document.getElementById('input-mortgage-rate')?.addEventListener('input', hideAnalysisReport);
+      document.getElementById('input-ltv')?.addEventListener('input', () => {
+        updateSuggestedRent();
+        hideAnalysisReport();
+      });
+
+      initEtfLogic();
+      updateSuggestedRent(); // 初始載入時設定房屋總價和預估租金
+      renderEtfHistoryChart('0050');
+      calculateROI();
+
+      // 視窗調整大小時重新渲染，確保字體與比例適應
+      window.addEventListener('resize', () => {
+        const currentDistrict = districtSelector.value;
+        const currentEtf = document.getElementById('input-etf-select');
+        const currentEtfId = currentEtf?.options[currentEtf.selectedIndex].dataset.id || '0050';
+        renderRealEstateChart(currentDistrict);
+        renderEtfHistoryChart(currentEtfId);
+      });
+    });
+  </script>
+</body>
+</html>
