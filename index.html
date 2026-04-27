@@ -14,11 +14,27 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- 聯盟網廣告追蹤腳本 -->
+  <script>var ConverlyCustomData = {channelId: null};</script>
+  <script async defer src="https://cdn.adotone.com/production/adlinks/451ea476860b9a468ea98977a90b77b7f6ad61079bd6f11d1a119990e2c4b82d.js"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
     body {
       font-family: 'Noto Sans TC', system-ui, -apple-system, sans-serif; /* 移除 Inter 作為通用 fallback，優先使用 Noto Sans TC 內建的拉丁字元或系統字體 */
     }
+    /* 新增：獲勝者發光動畫 */
+    @keyframes winner-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.2); transform: scale(1); }
+      50% { box-shadow: 0 0 20px 10px rgba(59, 130, 246, 0.1); transform: scale(1.02); }
+    }
+    @keyframes winner-glow-etf {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.2); transform: scale(1); }
+      50% { box-shadow: 0 0 20px 10px rgba(249, 115, 22, 0.1); transform: scale(1.02); }
+    }
+    .winner-highlight-re { animation: winner-glow 2s infinite ease-in-out; border-color: rgba(59, 130, 246, 0.5) !important; z-index: 10; }
+    .winner-highlight-etf { animation: winner-glow-etf 2s infinite ease-in-out; border-color: rgba(249, 115, 22, 0.5) !important; z-index: 10; }
   </style>
 </head>
 <body class="min-h-screen bg-[#FBFBF9] text-slate-800 font-sans selection:bg-stone-200 antialiased">
@@ -39,6 +55,11 @@
       </div>
     </div>
   </header>
+
+  <!-- AD_TOP: 導航欄下方的橫幅區 -->
+  <div class="max-w-6xl mx-auto px-6 mb-8">
+    <div class="w-full h-24 border-2 border-dashed border-slate-200 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 text-xs tracking-widest uppercase">Advertisement - Top Banner</div>
+  </div>
 
   <main class="max-w-6xl mx-auto px-6 pb-24 space-y-8">
 
@@ -195,6 +216,9 @@
 
       <!-- 展開式結果空間 -->
       <div id="analysis-expansion-area" class="hidden pt-12 animate-in fade-in slide-in-from-top-8 duration-700">
+        <!-- 動態聯盟行銷區塊 (Dynamic Affiliate CTA) -->
+        <div id="affiliate-cta-container" class="mb-10"></div>
+
         <div class="flex items-center gap-3 mb-6">
           <div class="w-1 h-6 bg-slate-900"></div>
           <h2 class="text-lg font-semibold tracking-tight">資產對比分析與成本細節</h2>
@@ -220,6 +244,9 @@
             <p class="text-3xl font-light text-slate-900"><span id="expanded-etf" class="font-bold">--</span> <span class="text-sm">萬</span></p>
           </div>
         </div>
+
+        <!-- AD_MIDDLE: 放在結果卡片與詳細表格中間，帶有動畫效果 -->
+        <div id="ad-middle-slot" class="hidden mb-10 w-full h-32 border-2 border-dashed border-slate-200 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 text-xs tracking-widest uppercase animate-in fade-in slide-in-from-bottom-8 duration-1000">Advertisement - Middle Inline</div>
 
         <div class="overflow-hidden rounded-2xl border border-slate-100 mb-10">
           <table class="w-full text-left text-sm leading-relaxed">
@@ -334,7 +361,7 @@
               <h4 class="font-bold text-slate-700 mb-3">其他假設</h4>
               <ul class="space-y-2 list-disc list-inside">
                 <li>規費：仲介 2% + 契稅 0.5% + 代書 3 萬。</li>
-                <li>維護：租金收入預設扣除 20% 修繕與管理成本。</li>
+                <li>維護：租金預扣 20% 修繕費，並預扣每年 0.25 萬之火險地震險。</li>
               </ul>
             </div>
           </div>
@@ -364,6 +391,56 @@
     </div>
   </main>
 
+  <!-- SEO Content Section: 專業分析區塊 -->
+  <section class="max-w-6xl mx-auto px-6 pb-24 border-t border-slate-100 pt-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <!-- 區塊 A：買房組的隱藏成本清單 -->
+      <div class="space-y-4">
+        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
+          <i data-lucide="key-round" class="w-5 h-5"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">房地產：不僅僅是房價</h3>
+        <p class="text-sm text-slate-500 leading-relaxed">買房除了房屋總價，還有許多「一次性」與「持續性」的隱藏成本：</p>
+        <ul class="space-y-2 text-sm text-slate-600">
+          <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5"></i> <strong>進場規費：</strong>包含契稅、印花稅、仲介服務費（通常1%-2%）。</li>
+          <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5"></i> <strong>房屋稅與地價稅：</strong>每年需繳納持有稅，稅率視自用或出租而異。</li>
+          <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5"></i> <strong>裝潢與維修：</strong>首年大筆支出與長期設備折舊損耗。</li>
+        </ul>
+      </div>
+
+      <!-- 區塊 B：ETF 組的機會成本 -->
+      <div class="space-y-4">
+        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center">
+          <i data-lucide="repeat" class="w-5 h-5"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">ETF：資金的時間價值</h3>
+        <p class="text-sm text-slate-500 leading-relaxed">不買房所省下的頭期款與每月房貸差額，透過複利效應產生的力量驚人：</p>
+        <ul class="space-y-2 text-sm text-slate-600">
+          <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5"></i> <strong>定期定額：</strong>將原需繳納房貸的錢轉向投入 ETF，享受企業成長紅利。</li>
+          <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5"></i> <strong>免稅優勢：</strong>目前台灣證券交易所得稅停徵，獲利空間更大。</li>
+          <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5"></i> <strong>資產配置彈性：</strong>隨時可以調整持股比例，應對不同市場週期。</li>
+        </ul>
+      </div>
+
+      <!-- 區塊 C：決策指南 -->
+      <div class="space-y-4">
+        <div class="w-10 h-10 bg-stone-100 text-stone-600 rounded-full flex items-center justify-center">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">決策指南：該如何選擇？</h3>
+        <p class="text-sm text-slate-500 leading-relaxed">沒有絕對正確的答案，只有最適合您的資產配置方案：</p>
+        <ul class="space-y-2 text-sm text-slate-600">
+          <li class="flex items-start gap-2"><i data-lucide="info" class="w-4 h-4 text-slate-400 mt-0.5"></i> <strong>流動性需求：</strong>若 3-5 年內可能有用錢需求，ETF 優於房地產。</li>
+          <li class="flex items-start gap-2"><i data-lucide="info" class="w-4 h-4 text-slate-400 mt-0.5"></i> <strong>居住需求：</strong>剛需自住可抵銷租金成本，且享有自住稅率優惠。</li>
+          <li class="flex items-start gap-2"><i data-lucide="info" class="w-4 h-4 text-slate-400 mt-0.5"></i> <strong>風險承受：</strong>房產具槓桿效果（雙面刃），ETF 波動較大但透明。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AD_BOTTOM: 專業分析文章之間 -->
+    <div class="mt-16 w-full h-24 border-2 border-dashed border-slate-200 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 text-xs tracking-widest uppercase">Advertisement - Bottom Footer Banner</div>
+  </section>
+
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-100 py-16 px-6">
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -372,6 +449,10 @@
         <p class="text-sm text-slate-400 leading-relaxed font-light">
           本平台所提供之資訊（包含但不限於房價走勢、ETF 報酬率等）均為模擬數據或基於歷史公開資料之推估，
           僅供技術展示與教育研究參考。我們不保證資訊之即時性與準確性。投資前請諮詢專業財務顧問，自行承擔損益風險。
+        </p>
+        <p class="text-[10px] text-slate-400 mt-4 italic">
+          <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>
+          本站包含聯盟行銷連結，若您透過連結開戶或申辦相關業務，我可能會獲得微薄分潤以支持網站運行。
         </p>
       </div>
       <div class="md:text-right flex flex-col justify-between">
@@ -741,6 +822,7 @@
       const etfRateInput = document.getElementById('input-etf-rate');
       const rentInput = document.getElementById('input-rent');
       const districtSelector = document.getElementById('district-selector');
+      const ctaContainer = document.getElementById('affiliate-cta-container');
       const district = districtSelector?.value;
       const reTypeInput = document.getElementById('input-re-type');
       const waitYearsInput = document.getElementById('input-wait-years');
@@ -771,6 +853,9 @@
       const waitYears = reType === 'presale' ? (parseFloat(waitYearsInput.value) || 0) : 0;
       const ltv = (parseFloat(ltvInput.value) || 70) / 100;
       
+      // 自動計算合理保險費用
+      const fireInsurance = 0.25; // 預設每年 2500 元火險地震險
+      
       // 更新流動性描述 (量化)
       // TODO: 考慮將流動性描述與閉鎖期邏輯整合到 calculateROI 之外，讓 updateSuggestedRent 也能觸發
       if(els['row-re-liquidity']) els['row-re-liquidity'].innerText = years < 5 ? '極低 (受房地合一稅閉鎖影響)' : '低 (需 3-6 個月售屋期)';
@@ -779,7 +864,8 @@
       const downPaymentRatio = 1 - ltv;
       const initialPrice = budget / downPaymentRatio;
       const loanAmount = initialPrice * ltv;
-      const reEntryCost = (initialPrice * 0.02) + (initialPrice * 0.005) + 3; // 2%仲介 + 0.5%契稅印花 + 3萬代書
+      const mortgageInsurance = loanAmount * 0.008; // 預設 0.8% 為房貸壽險支出
+      const reEntryCost = (initialPrice * 0.02) + (initialPrice * 0.005) + 3 + mortgageInsurance;
       if(document.getElementById('display-total-price')) document.getElementById('display-total-price').innerText = Math.round(initialPrice).toLocaleString();
       const futurePrice = getStaggeredPrice(initialPrice, reRate, years);
       const reExitCost = futurePrice * 0.04; // 4%仲介費
@@ -807,7 +893,7 @@
       for (let i = 1; i <= years; i++) {
         const yrMonthlyRent = monthlyRent * Math.pow(1 + rentGrowth, i - 1);
         const yrNetRent = yrMonthlyRent * 0.8; // 扣除 20% 維護
-        if (i > waitYears) totalNetRentIncome += (yrNetRent * 12);
+        if (i > waitYears) totalNetRentIncome += (yrNetRent * 12) - fireInsurance; // 每年扣除火險
         if (i === Math.ceil(years)) currentYearNetRent = yrNetRent;
       }
 
@@ -818,28 +904,27 @@
       
       // 定義結算當下的現金流壓力（月房貸 - 當前月租金）
       const isWaitPeriodNow = years <= waitYears;
-      const currentSipOutflow = Math.max(0, lastMonthlyMortgage - (isWaitPeriodNow ? 0 : currentYearNetRent));
+      const currentSipOutflow = Math.max(0, lastMonthlyMortgage + (isWaitPeriodNow ? 0 : (fireInsurance/12)) - (isWaitPeriodNow ? 0 : currentYearNetRent));
       
-      let taxRate = 0.15;
-      let taxExemption = 0;
-      
-      // 自住優惠判斷
+      // 房地合一稅邏輯
+      let taxRate = 0.15; // 預設 10 年以上稅率
+      let taxableProfit = profit;
       if (isSelfResident && years >= 6) {
-        taxExemption = 400;
+        taxableProfit = Math.max(0, profit - 400); // 獲利超過 400 萬的部分才課稅
         taxRate = 0.10;
       } else {
         if (years < 2) taxRate = 0.45;
         else if (years < 5) taxRate = 0.35;
         else if (years < 10) taxRate = 0.20;
+        taxableProfit = Math.max(0, profit); // 非自住無免稅額，且確保虧損時不課稅
       }
-      
-      const houseTax = profit > taxExemption ? (profit - taxExemption) * taxRate : 0;
+      const houseTax = taxableProfit * taxRate;
 
       // 淨資產 = 未來售價 + 累計租金收入 - 剩餘貸款本金 - 出場交易成本 - 房地合一稅 - 進場成本
       const reFinalNet = futurePrice + totalNetRentIncome - remainingLoan - reExitCost - houseTax - reEntryCost;
       
       if(els['expanded-re']) els['expanded-re'].innerText = Math.round(reFinalNet).toLocaleString();
-      if(els['row-re-entry']) els['row-re-entry'].innerHTML = `約 ${Math.round(reEntryCost)} 萬 <br><span class="text-[10px] text-slate-400 font-light">(含仲介2%、契稅0.5%、代書費)</span>`;
+      if(els['row-re-entry']) els['row-re-entry'].innerHTML = `約 ${Math.round(reEntryCost)} 萬 <br><span class="text-[10px] text-slate-400 font-light">(含仲介、規費與貸款 0.8% 房貸壽險)</span>`;
       if(els['row-re-tax']) {
         const taxInfo = isSelfResident && years >= 6 ? `自住優惠 10% (免稅額 400萬)` : `房地合一稅 ${taxRate*100}%`;
         els['row-re-tax'].innerHTML = `約 ${Math.round(houseTax)} 萬 <br><span class="text-[10px] text-slate-400 font-light">(${taxInfo})</span>`;
@@ -871,7 +956,7 @@
           const isGracePeriod = m <= graceMonths;
           const currentMYear = Math.ceil(m / 12);
           const mortgageOutflow = isGracePeriod ? monthlyInterestOnly : monthlyPI;
-          const rentInflow = isWaitPeriod ? 0 : (monthlyRent * Math.pow(1 + rentGrowth, currentMYear - 1) * 0.8);
+          const rentInflow = isWaitPeriod ? 0 : (monthlyRent * Math.pow(1 + rentGrowth, currentMYear - 1) * 0.8) - (fireInsurance / 12);
           const monthlySipAmount = Math.max(0, mortgageOutflow - rentInflow);
           
           sipEtfValue = (sipEtfValue + monthlySipAmount) * (1 + monthlyEtfRate);
@@ -892,16 +977,53 @@
       const badgeEtf = document.getElementById('badge-etf');
 
       if (reFinalNet > etfFinalNet) {
-        cardRe.className = 'relative p-6 bg-blue-50/30 border-2 border-blue-500/20 rounded-2xl transition-all duration-500 shadow-lg shadow-blue-100/50';
+        cardRe.className = 'relative p-6 bg-blue-50/40 border-2 border-blue-500/40 rounded-2xl transition-all duration-500 shadow-xl winner-highlight-re';
         cardEtf.className = 'relative p-6 bg-white border border-slate-100 rounded-2xl transition-all duration-500 opacity-60';
         badgeRe?.classList.remove('hidden');
         badgeEtf?.classList.add('hidden');
+
+        // 更新房貸聯盟連結
+        if(ctaContainer) {
+          ctaContainer.innerHTML = `
+            <div class="p-6 bg-white border-l-4 border-blue-600 rounded-r-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-all border border-slate-100">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-blue-50 rounded-xl text-blue-600 shrink-0">
+                  <i data-lucide="badge-percent" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h3 class="text-slate-900 font-bold mb-1">專業建議：優化您的房貸配置</h3>
+                  <p class="text-sm text-slate-500">目前的房貸利率環境下，合適的轉貸或首購方案可為您省下數十萬利息成本。點擊下方查看最新銀行優惠。</p>
+                </div>
+              </div>
+              <a href="#" class="px-8 py-3 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors whitespace-nowrap">查看最新房貸利率</a>
+            </div>`;
+        }
       } else {
-        cardEtf.className = 'relative p-6 bg-blue-50/30 border-2 border-blue-500/20 rounded-2xl transition-all duration-500 shadow-lg shadow-blue-100/50';
+        cardEtf.className = 'relative p-6 bg-orange-50/40 border-2 border-orange-500/40 rounded-2xl transition-all duration-500 shadow-xl winner-highlight-etf';
         cardRe.className = 'relative p-6 bg-white border border-slate-100 rounded-2xl transition-all duration-500 opacity-60';
         badgeEtf?.classList.remove('hidden');
         badgeRe?.classList.add('hidden');
+
+        // 更新證券聯盟連結
+        if(ctaContainer) {
+          ctaContainer.innerHTML = `
+            <div class="p-6 bg-white border-l-4 border-orange-500 rounded-r-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-all border border-slate-100">
+              <div class="flex items-start gap-4">
+                <div class="p-3 bg-orange-50 rounded-xl text-orange-500 shrink-0">
+                  <i data-lucide="rocket" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h3 class="text-slate-900 font-bold mb-1">專業建議：啟動您的 ${selectedEtfName} 長期複利</h3>
+                  <p class="text-sm text-slate-500">根據數據，該標的具備穩健的長期報酬。透過指定連結開戶，可享手續費優惠並自動啟用定期定額計劃。</p>
+                </div>
+              </div>
+              <a href="#" class="px-8 py-3 bg-orange-500 text-white rounded-lg font-bold text-sm hover:bg-orange-600 transition-colors whitespace-nowrap">領取手續費折扣</a>
+            </div>`;
+        }
       }
+
+      // 重新渲染動態生成的圖標
+      if (typeof lucide !== 'undefined') lucide.createIcons();
 
       if(els['row-etf-entry']) els['row-etf-entry'].innerHTML = isUS 
         ? `約 1,000 元 <br><span class="text-[10px] text-slate-400 font-light">(美股電匯手續費)</span>` 
@@ -925,24 +1047,24 @@
           }
           let yrAccumulatedRent = 0;
           for(let r=1; r<=i; r++) {
-            if(r > waitYears) yrAccumulatedRent += (monthlyRent * Math.pow(1 + rentGrowth, r - 1) * 0.8 * 12);
+            if(r > waitYears) yrAccumulatedRent += (monthlyRent * Math.pow(1 + rentGrowth, r - 1) * 0.8 * 12) - fireInsurance;
           }
 
           const yrExitCost = yrPrice * 0.04;
           
-          let yrTaxExemption = 0;
+          const yrProfit = yrPrice - initialPrice - reEntryCost - yrExitCost;
           let yrTaxRate = 0.15;
+          let yrTaxableProfit = yrProfit;
           if (isSelfResident && i >= 6) {
-            yrTaxExemption = 400;
+            yrTaxableProfit = Math.max(0, yrProfit - 400);
             yrTaxRate = 0.10;
           } else {
             if (i < 2) yrTaxRate = 0.45;
             else if (i < 5) yrTaxRate = 0.35;
             else if (i < 10) yrTaxRate = 0.20;
+            yrTaxableProfit = Math.max(0, yrProfit);
           }
-          
-          const yrProfit = yrPrice - initialPrice - reEntryCost - yrExitCost;
-          const yrTax = yrProfit > yrTaxExemption ? (yrProfit - yrTaxExemption) * yrTaxRate : 0;
+          const yrTax = yrTaxableProfit * yrTaxRate;
           const yrReNet = yrPrice + yrAccumulatedRent - yrRemainingLoan - yrExitCost - yrTax - reEntryCost;
           const yrReTotalCost = reEntryCost + yrExitCost + yrTax;
 
@@ -956,7 +1078,7 @@
               const mIsGrace = m <= graceMonths;
               const mOutflow = mIsGrace ? monthlyInterestOnly : monthlyPI;
               const mYear = Math.ceil(m / 12);
-              const mInflow = mIsWait ? 0 : (monthlyRent * Math.pow(1 + rentGrowth, mYear - 1) * 0.8);
+              const mInflow = mIsWait ? 0 : (monthlyRent * Math.pow(1 + rentGrowth, mYear - 1) * 0.8) - (fireInsurance / 12);
               const mNetSip = Math.max(0, mOutflow - mInflow);
               yrSipEtf = (yrSipEtf + mNetSip) * (1 + monthlyEtfRate);
               if (m > (i - 1) * 12) yrAnnualSipOutflow += mNetSip;
@@ -1056,9 +1178,11 @@
         calculateROI();
         // 展開面板
         const expansion = document.getElementById('analysis-expansion-area');
+        const adMiddle = document.getElementById('ad-middle-slot');
         const icon = document.getElementById('calc-btn-icon');
         if (expansion) {
           expansion.classList.remove('hidden');
+          adMiddle?.classList.remove('hidden');
           calcBtn.classList.add('bg-slate-600');
           icon.style.transform = 'rotate(180deg)';
           
